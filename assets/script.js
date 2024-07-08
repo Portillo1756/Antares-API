@@ -5,7 +5,7 @@ const currentWeatherDiv = document.querySelector(".current-weather");
 const weatherCardsDiv = document.querySelector(".weather-cards");
 
 // API key for weatherstack
-const API_KEY = "c5fa2674d08fd03ad0df1e3ac2d4b508";
+const API_KEY = "d4c8eb8011f4ca610d1b753b6c442c51";
 
 const createWeatherCard = (cityName, weatherItem, index) => {
     if(index === 0) {
@@ -31,7 +31,7 @@ const createWeatherCard = (cityName, weatherItem, index) => {
 } 
 
 const  getWeatherDetails = (cityName, lat, lon) => {
-    const WEATHER_API_URL = `http://dataservice.accuweather.com/forecasts/v1/daily/10day/{locationKey}`;
+    const WEATHER_API_URL = `http://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${API_KEY}`;
 
     fetch(WEATHER_API_URL).then(res => res.json()).then(data => {
         console.log(data);
@@ -39,7 +39,7 @@ const  getWeatherDetails = (cityName, lat, lon) => {
         const uniqueForecastDays = [];
         const fiveDaysForecast = data.list.filter(forecast => {
             const forecastData = new Data(forecast.dt_txt).getData();
-            if (!uniqueForecastDays.includes(forecastData)){
+            if (!uniqueForecastDays.includes(forecastData)) {
                return uniqueForecastDays.push(forecastData);
             }
         });
@@ -76,13 +76,13 @@ const  getWeatherDetails = (cityName, lat, lon) => {
         });
     }
 
-const getUserCoordinates = () => {
-    navigator.geolocation.getCurrentPosition(
-        position => {
+    const getUserCoordinates = () => {
+        navigator.geolocation.getCurrentPosition(
+            position => {
 
             // get coordinates of user location
             const {latitude, longitude} = position.coords;
-            const REVERSE_GEOCODING_URL = `http://api.openweathermap.org/geo/1.0/reverse?lat=${latitude}&lon=${longitude}&limit=&appid=${API_KEY}`;
+            const REVERSE_GEOCODING_URL = `http://api.openweathermap.org/geo/1.0/reverse?lat=${latitude}&lon=${longitude}&limit=1&appid=${API_KEY}`;
 
             // get city name from coordinates using reserve geocoding API
             fetch(REVERSE_GEOCODING_URL).then(res => res.json()).then(data => {
