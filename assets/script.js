@@ -1,4 +1,4 @@
-const cityInput = document.querySelector (".city-input");
+const cityInput = document.querySelector(".city-input");
 const searchButton = document.querySelector(".search-btn");
 const locationButton = document.querySelector(".location-btn");
 const currentWeatherDiv = document.querySelector(".current-weather");
@@ -38,7 +38,8 @@ const  getWeatherDetails = (cityName, lat, lon) => {
 
         const uniqueForecastDays = [];
         const fiveDaysForecast = data.list.filter(forecast => {
-            const forecastData = new Data(forecast.dt_txt).getData();
+            const forecastData = new Date(forecast.dt_txt).getDate();
+            console.log(fiveDaysForecast)
             if (!uniqueForecastDays.includes(forecastData)) {
                return uniqueForecastDays.push(forecastData);
             }
@@ -48,7 +49,8 @@ const  getWeatherDetails = (cityName, lat, lon) => {
         cityInput.value = "";
         currentWeatherDiv.innerHTML = "";
         weatherCardsDiv.innerHTML = "";
-
+        
+        
         fiveDaysForecast.forEach((weatherItem, index) => {
             if(index === 0) {
                 currentWeatherDiv.insertAdjacentHTML("beforeend", createWeatherCard(cityName, weatherItem, index));
@@ -82,11 +84,14 @@ const  getWeatherDetails = (cityName, lat, lon) => {
 
             // get coordinates of user location
             const {latitude, longitude} = position.coords;
+            console.log(latitude)
+            console.log(longitude)
             const REVERSE_GEOCODING_URL = `http://api.openweathermap.org/geo/1.0/reverse?lat=${latitude}&lon=${longitude}&limit=1&appid=${API_KEY}`;
 
             // get city name from coordinates using reserve geocoding API
             fetch(REVERSE_GEOCODING_URL).then(res => res.json()).then(data => {
-                const {name } = data[0];
+                const {name} = data[0];
+                console.log(name)
                 getWeatherDetails(name, latitude, longitude);
            }).catch(() => {
                   alert("an error occurred while fetching the city!");
@@ -102,4 +107,4 @@ const  getWeatherDetails = (cityName, lat, lon) => {
 
 locationButton.addEventListener("click", getUserCoordinates);
 searchButton.addEventListener("click", getCityCoordinates);
-cityInput.addEventListener("keyup", e => e.key === "Enter" && getCityCoordinates());
+// cityInput.addEventListener("keyup", e => e.key === "Enter" && getCityCoordinates);
